@@ -55,7 +55,12 @@ namespace FreeBuild
 
         private bool HasFreeBuildPermission(UnturnedPlayer player)
         {
-            return player != null && R.Permissions.HasPermission(player, Configuration.Instance.Permission);
+            return player != null &&
+                   R.Permissions.HasPermission(
+                       player,
+                       Configuration.Instance.Permission,
+                       new List<string>()
+                   );
         }
 
         private void TryGrantWorkzone(Player player)
@@ -119,7 +124,8 @@ namespace FreeBuild
                 return;
             }
 
-            if (drop.asset != null && Configuration.Instance.BlacklistedBarricadeIds.Contains(drop.asset.id))
+            if (drop.asset != null &&
+                Configuration.Instance.BlacklistedBarricadeIds.Contains(drop.asset.id))
             {
                 shouldAllow = false;
                 return;
@@ -187,7 +193,8 @@ namespace FreeBuild
                 return;
             }
 
-            if (drop.asset != null && Configuration.Instance.BlacklistedStructureIds.Contains(drop.asset.id))
+            if (drop.asset != null &&
+                Configuration.Instance.BlacklistedStructureIds.Contains(drop.asset.id))
             {
                 shouldAllow = false;
                 return;
