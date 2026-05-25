@@ -2,15 +2,18 @@ using Rocket.Core;
 using Rocket.Core.Plugins;
 using Rocket.Unturned.Player;
 using Rocket.Unturned;
-using Rocket.API;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace FreeBuild
 {
     public class FreeBuildPlugin : RocketPlugin<FreeBuildConfiguration>
     {
+        private readonly Dictionary<uint, Vector3> barricadeOriginalPositions = new Dictionary<uint, Vector3>();
+        private readonly Dictionary<uint, Vector3> structureOriginalPositions = new Dictionary<uint, Vector3>();
+
         protected override void Load()
         {
             U.Events.OnPlayerConnected += OnPlayerConnected;
@@ -35,6 +38,9 @@ namespace FreeBuild
 
             BarricadeManager.onTransformRequested -= OnBarricadeTransformRequested;
             StructureManager.onTransformRequested -= OnStructureTransformRequested;
+
+            barricadeOriginalPositions.Clear();
+            structureOriginalPositions.Clear();
 
             Rocket.Core.Logging.Logger.Log("FreeBuild unloaded.");
         }
@@ -113,15 +119,23 @@ namespace FreeBuild
                 return;
             }
 
-            if (Vector3.Distance(data.point, point) > Configuration.Instance.MaxMoveDistance)
+            if (drop.asset != null && Configuration.Instance.BlacklistedBarricadeIds.Contains(drop.asset.id))
             {
                 shouldAllow = false;
                 return;
             }
 
-            if (drop.asset != null && Configuration.Instance.BlacklistedBarricadeIds.Contains(drop.asset.id))
+            if (!barricadeOriginalPositions.ContainsKey(instanceID))
+            {
+                barricadeOriginalPositions[instanceID] = data.point;
+            }
+
+            Vector3 originalPoint = barricadeOriginalPositions[instanceID];
+
+            if (Vector3.Distance(originalPoint, point) > Configuration.Instance.MaxMoveDistance)
             {
                 shouldAllow = false;
+                point = data.point;
                 return;
             }
         }
@@ -173,15 +187,23 @@ namespace FreeBuild
                 return;
             }
 
-            if (Vector3.Distance(data.point, point) > Configuration.Instance.MaxMoveDistance)
+            if (drop.asset != null && Configuration.Instance.BlacklistedStructureIds.Contains(drop.asset.id))
             {
                 shouldAllow = false;
                 return;
             }
 
-            if (drop.asset != null && Configuration.Instance.BlacklistedStructureIds.Contains(drop.asset.id))
+            if (!structureOriginalPositions.ContainsKey(instanceID))
+            {
+                structureOriginalPositions[instanceID] = data.point;
+            }
+
+            Vector3 originalPoint = structureOriginalPositions[instanceID];
+
+            if (Vector3.Distance(originalPoint, point) > Configuration.Instance.MaxMoveDistance)
             {
                 shouldAllow = false;
+                point = data.point;
                 return;
             }
         }
