@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AssemblyName>FreeBuild</AssemblyName>
+    <RootNamespace>FreeBuild</RootNamespace>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RestoreMonarchy.RocketRedist" Version="3.25.4" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
