@@ -58,8 +58,7 @@ namespace FreeBuild
             return player != null &&
                    R.Permissions.HasPermission(
                        player,
-                       Configuration.Instance.Permission,
-                       new List<string>()
+                       Configuration.Instance.Permission
                    );
         }
 
