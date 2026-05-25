@@ -14,6 +14,7 @@ namespace FreeBuild
         {
             Permission = "freebuild.use";
             MaxMoveDistance = 15f;
+
             BlacklistedBarricadeIds = new List<ushort>();
             BlacklistedStructureIds = new List<ushort>();
         }
